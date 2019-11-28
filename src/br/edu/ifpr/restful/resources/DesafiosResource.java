@@ -1,4 +1,4 @@
-package br.edu.ifpr.restful.crud.resources;
+package br.edu.ifpr.restful.resources;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,13 +21,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import br.edu.ifpr.restful.crud.model.DesafioBean;
+import br.edu.ifpr.restful.beans.DesafioBean;
 
 @Singleton
 @Path("desafio")
 public class DesafiosResource
 {
-    private static final Logger LOGGER = Logger.getLogger(DesafioBeanResource.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DesafiosResource.class.getName());
     
     @Context UriInfo uriInfo;
     
@@ -65,20 +65,18 @@ public class DesafiosResource
     }
     
     @POST
-    public Response insertDesafioBean(@BeanParam DesafioBeanBean DesafioBeanBean)
+	public Response insertDesafioBean(@BeanParam DesafioBean DesafioBean)
     {
-        int id = DesafioBeans.size()+1;
-        DesafioBean DesafioBean = new DesafioBean(DesafioBeanBean);
-        DesafioBeans.put(id,DesafioBean);
+        int id = desafios.size()+1;
+        desafios.put(id,DesafioBean);
         return Response.ok().build();
     }
     
     @PUT
-    public Response updateDesafioBean(@BeanParam DesafioBeanBean DesafioBeanBean)
+    public Response updateDesafioBean(@BeanParam DesafioBean desafioBean)
     {
-        int id = DesafioBeanBean.getId();
-        DesafioBean DesafioBean = new DesafioBean(DesafioBeanBean);
-        DesafioBeans.replace(id,DesafioBean);
+        int id = desafioBean.getId();
+        desafios.replace(id,desafioBean);
         return Response.ok().build();
     }
     
@@ -87,28 +85,28 @@ public class DesafiosResource
     public Response deleteDesafioBean(@PathParam("id") Integer id)
     {
         LOGGER.info("");
-        DesafioBeans.remove(id);
+        desafios.remove(id);
         return Response.ok().build();
     }
     
-    @GET @Path("{id:[0-9]}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response getDesafioBean(@PathParam("id") Integer id)
-    {
-        DesafioBean DesafioBean = DesafioBeans.get(id);
-        if(DesafioBean != null)
-        {
-            GenericEntity<DesafioBean> entity = new GenericEntity<DesafioBean> (DesafioBeans.get(id)){};
-            return Response.ok().entity(entity).build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).build();
-    }
+//    @GET @Path("{id:[0-9]}")
+//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    public Response getDesafioBean(@PathParam("id") Integer id)
+//    {
+//        DesafioBean DesafioBean = DesafioBeans.get(id);
+//        if(DesafioBean != null)
+//        {
+//            GenericEntity<DesafioBean> entity = new GenericEntity<DesafioBean> (DesafioBeans.get(id)){};
+//            return Response.ok().entity(entity).build();
+//        }
+//        return Response.status(Response.Status.NOT_FOUND).build();
+//    }
     
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response getDesafioBeans()
     {
-        List<DesafioBean> listDesafioBeans = new ArrayList<>(DesafioBeans.values());
+        List<DesafioBean> listDesafioBeans = new ArrayList<>(desafios.values());
         GenericEntity<List<DesafioBean>> entity = new GenericEntity<List<DesafioBean>> (listDesafioBeans){};
         return Response.ok().entity(entity).build();
     }
